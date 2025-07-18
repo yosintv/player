@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clean 12-Hour Digital Clock</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+        }
+
+        .clock-container {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .clock-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .clock {
+            font-size: 5.5rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            letter-spacing: 1px;
+            margin: 0;
+            transition: color 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: baseline;
+        }
+
+        .time {
+            display: inline;
+        }
+
+        .seconds {
+            color: #6366f1;
+        }
+
+        .period {
+            font-size: 2.75rem; /* Half the size of the clock font */
+            color: #4a4a4a;
+            margin-left: 8px;
+        }
+
+        .date {
+            font-size: 1.8rem;
+            font-weight: 400;
+            color: #4a4a4a;
+            margin-top: 8px;
+        }
+
+        .timezone {
+            font-size: 1.2rem;
+            font-weight: 300;
+            color: #6b7280;
+            margin-top: 6px;
+        }
+
+        @media (max-width: 768px) {
+            .clock {
+                font-size: 4rem;
+            }
+            .period {
+                font-size: 2rem; /* Half the size of the clock font */
+            }
+            .date {
+                font-size: 1.4rem;
+            }
+            .timezone {
+                font-size: 1rem;
+            }
+            .clock-container {
+                padding: 25px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .clock {
+                font-size: 2.5rem;
+            }
+            .period {
+                font-size: 1.25rem; /* Half the size of the clock font */
+            }
+            .date {
+                font-size: 1.1rem;
+            }
+            .timezone {
+                font-size: 0.8rem;
+            }
+            .clock-container {
+                padding: 20px;
+            }
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .clock-update {
+            animation: fadeIn 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="clock-container">
+        <div class="clock" id="clock">
+            <span class="time" id="time">12:00:00</span>
+            <span class="period" id="period">AM</span>
+        </div>
+        <div class="date" id="date">January 1, 2025</div>
+        <div class="timezone" id="timezone">Local Timezone</div>
+    </div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const timeOptions = {
+                hour12: true,
+                hour: 'numeric',
+                minute: '2-digit',
+                second: '2-digit'
+            };
+            const timeString = now.toLocaleTimeString('en-US', timeOptions);
+            const dateOptions = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            const dateString = now.toLocaleDateString('en-US', dateOptions);
+            const timezoneString = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+            const clockElement = document.getElementById('clock');
+            const timeElement = document.getElementById('time');
+            const periodElement = document.getElementById('period');
+            const dateElement = document.getElementById('date');
+            const timezoneElement = document.getElementById('timezone');
+
+            clockElement.classList.add('clock-update');
+            setTimeout(() => clockElement.classList.remove('clock-update'), 300);
+
+            const [time, period] = timeString.split(' ');
+            const [hours, minutes, seconds] = time.split(':');
+            timeElement.innerHTML = `${hours}:${minutes}:<span class="seconds">${seconds}</span>`;
+            periodElement.textContent = period;
+            dateElement.textContent = dateString;
+            timezoneElement.textContent = timezoneString;
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+</body>
+</html>
